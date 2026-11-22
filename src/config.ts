@@ -10,7 +10,7 @@ export interface Config {
   /** Kopfzeile Host für Invoice Ninja, damit Laravel die richtige APP_URL sieht */
   ninjaHost?: string;
   authMode: AuthMode;
-  /** z. B. https://feigenbaum.cloudflareaccess.com */
+  /** z. B. https://jonas-kuhlmann.cloudflareaccess.com */
   accessTeamDomain?: string;
   accessAud?: string;
   /** Nur diese Adressen dürfen, zusätzlich zur Access-Policy */
