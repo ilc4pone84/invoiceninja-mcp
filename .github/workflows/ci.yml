@@ -30,7 +30,7 @@ jobs:
         run: docker build -t invoiceninja-mcp:ci .
       - name: Start und /health
         run: |
-          docker run -d --name t --read-only --cap-drop ALL --security-opt no-new-privileges -p 8080:8080 \
+          docker run -d --name smoke --read-only --cap-drop ALL --security-opt no-new-privileges -p 8080:8080 \
             -e INVOICENINJA_URL=http://127.0.0.1:9 -e INVOICENINJA_API_TOKEN=x \
             -e CF_ACCESS_TEAM_DOMAIN=https://example.cloudflareaccess.com -e CF_ACCESS_AUD=x -e ALLOWED_EMAILS=a@b.de \
             invoiceninja-mcp:ci
