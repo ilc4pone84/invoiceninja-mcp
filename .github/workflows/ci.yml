@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm audit --omit=dev --audit-level=high
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Build image (ohne Push)
+        run: docker build -t invoiceninja-mcp:ci .
+      - name: Start und /health
+        run: |
+          docker run -d --name t --read-only --cap-drop ALL --security-opt no-new-privileges -p 8080:8080 \
+            -e INVOICENINJA_URL=http://127.0.0.1:9 -e INVOICENINJA_API_TOKEN=x \
+            -e CF_ACCESS_TEAM_DOMAIN=https://example.cloudflareaccess.com -e CF_ACCESS_AUD=x -e ALLOWED_EMAILS=a@b.de \
+            invoiceninja-mcp:ci
+          for i in $(seq 1 20); do curl -fsS localhost:8080/health && break; sleep 1; done
+          test "$(curl -s -o /dev/null -w '%{http_code}' -X POST localhost:8080/mcp -d '{}')" = 403

@@ -1,0 +1,24 @@
+{
+  "name": "invoiceninja-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MCP-Server für Invoice Ninja v5: lesen und Entwürfe, kein Löschen, kein Versand",
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "jose": "6.2.18",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "typescript": "5.9.3",
+    "vitest": "5.1.1"
+  }
+}
